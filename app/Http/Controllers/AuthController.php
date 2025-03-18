@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Enums\UserTypes;
+use App\Models\Student;
 use Hash;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rules\Enum;
 use Log;
+use Mail;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Support\Facades\Password;
 
@@ -19,12 +21,20 @@ class AuthController extends Controller
 
     public function sendResetPasswordEmail()
     {
+        Log::info('asd');
         request()->validate(['email' => 'required|email', 'user_type' => ['required', new Enum(UserTypes::class)]]);
         $userType = request()->only('user_type')['user_type'] . 's';
 
+
         $response = Password::broker($userType)->sendResetLink(
-            request()->only('email')
+            request()->only('email') , function ($user,$token) use ($userType) {
+                $type = substr($userType, 0, -1);
+                Mail::raw("Here is your password reset link ".env("FRONT_END_URL")."/reset-password?user_type={$type}&token={$token}", function ($message) use ($user) {
+                    $message->to($user['email'])->subject('Reset your email');
+                });
+            }
         );
+
 
         return $response == Password::ResetLinkSent
             ? response()->json(['message' => 'Password reset link sent!'], 200)
@@ -39,7 +49,6 @@ class AuthController extends Controller
             'user_type' => ['required', new Enum(UserTypes::class)],
             'password' => 'required|confirmed',
         ]);
-        Log::info('userType');
         $userType = request()->only('user_type')['user_type'] . 's';
 
         $response = Password::broker($userType)->reset(

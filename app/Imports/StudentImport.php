@@ -8,10 +8,9 @@ use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Mail;
-use Nette\Utils\Random;
 use Str;
 
-class StudentImport implements ToModel,WithHeadingRow
+class StudentImport implements ToModel, WithHeadingRow
 {
     /**
      * @param array $row
@@ -21,6 +20,7 @@ class StudentImport implements ToModel,WithHeadingRow
     public function model(array $row)
     {
         try {
+        Log ::info('hi');
             validator($row, [
                 "first_name" => "required",
                 "family_name" => "required",
@@ -29,15 +29,17 @@ class StudentImport implements ToModel,WithHeadingRow
                 "email" => 'required|email|ends_with:esi-sba.dz',
             ])->validate();
 
+            Log:info('importing');
+
             $password = Str::random(16);
 
             $recipient = $row['email'];
             $subject = 'Your MedEsi account';
-            $message = "i fucking hate you guys , here is Your MedEsi account creds are {$row['email']}:{$password} \n fuck you nassim";
-    
+            $message = "i fucking hate you guys , here is Your MedEsi account creds {$row['email']}:{$password} \n fuck you nassim";
+
             Mail::raw($message, function ($mail) use ($recipient, $subject) {
                 $mail->to($recipient)
-                     ->subject($subject);
+                    ->subject($subject);
             });
 
             return new Student([
@@ -49,12 +51,12 @@ class StudentImport implements ToModel,WithHeadingRow
                 "password" => Hash::make($password)
             ]);
 
-            
-
         } catch (\Illuminate\Validation\ValidationException $e) {
             Log::error("Validation error " . $e->getMessage());
+            throw $e;
         } catch (\Exception $e) {
-            Log::error("". $e->getMessage());
+            Log::error("" . $e->getMessage());
+            throw $e;
         }
 
     }

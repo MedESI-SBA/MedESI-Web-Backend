@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use Hash;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,7 +18,12 @@ class AdminFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'familyName' => fake()->lastName(),
+            'firstName' => fake()->firstName(),
+            'email' => fake()->email(),
+            'password' => Hash::make('password'),
+            'phoneNumber' => fake()->phoneNumber(),
+            'roles' => 'admin'
         ];
     }
 }
