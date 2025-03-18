@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\UserTypes;
+use Hash;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rules\Enum;
 use Log;
@@ -35,13 +36,16 @@ class AuthController extends Controller
         request()->validate([
             'token' => 'required',
             'email' => 'required|email',
-            'password' => 'required|confirmed|min:8',
+            'user_type' => ['required', new Enum(UserTypes::class)],
+            'password' => 'required|confirmed',
         ]);
+        Log::info('userType');
+        $userType = request()->only('user_type')['user_type'] . 's';
 
-        $response = Password::broker('students')->reset(
+        $response = Password::broker($userType)->reset(
             request()->only('token', 'email', 'password', 'password_confirmation'),
             function ($user, $password) {
-                $user->password = bcrypt($password);
+                $user->password = Hash::make($password);
                 $user->save();
             }
         );

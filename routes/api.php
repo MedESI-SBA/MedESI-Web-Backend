@@ -10,7 +10,7 @@ Route::post('/forgot-password',[AuthController::class,'sendResetPasswordEmail'])
 
 Route::get('/reset-password/{token}', function (string $token) {
 
-    return response()->json(['hi']);
+    return response()->json(['token' => $token]);
 
 })->middleware('guest')->name('password.reset');
 

@@ -13,6 +13,8 @@ class Student extends Authenticatable implements JWTSubject
     /** @use HasFactory<\Database\Factories\StudentFactory> */
     use HasFactory,Notifiable;
 
+    protected $guarded = [] ;
+
     public function getJWTIdentifier() {
         return $this->getKey();
     }
