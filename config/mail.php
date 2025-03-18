@@ -39,15 +39,16 @@ return [
 
         'smtp' => [
             'transport' => 'smtp',
-            'scheme' => env('MAIL_SCHEME'),
-            'url' => env('MAIL_URL'),
-            'host' => env('MAIL_HOST', '127.0.0.1'),
-            'port' => env('MAIL_PORT', 2525),
-            'username' => env('MAIL_USERNAME'),
-            'password' => env('MAIL_PASSWORD'),
-            'timeout' => null,
+            'scheme' => 'smtps', // Gmail uses SSL/TLS
+            'url' => null, // Not needed for direct SMTP configuration
+            'host' => 'smtp.gmail.com',
+            'port' => 465, // Gmail's secure port
+            'username' => env('SMTP_EMAIL'), // or process.env.SMTP_EMAIL
+            'password' => env('SMTP_AUTH'), // or process.env.SMTP_AUTH
+            'timeout' => null, // You can set a timeout if needed
             'local_domain' => env('MAIL_EHLO_DOMAIN', parse_url(env('APP_URL', 'http://localhost'), PHP_URL_HOST)),
         ],
+
 
         'ses' => [
             'transport' => 'ses',
