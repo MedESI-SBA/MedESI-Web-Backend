@@ -8,9 +8,8 @@ use Illuminate\Notifications\Notifiable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
 
-class Student extends Authenticatable implements JWTSubject 
+class Patient extends Authenticatable implements JWTSubject 
 {
-    /** @use HasFactory<\Database\Factories\StudentFactory> */
     use HasFactory,Notifiable;
 
     protected $guarded = [] ;
@@ -21,5 +20,9 @@ class Student extends Authenticatable implements JWTSubject
 
     public function getJWTCustomClaims() {
         return [];
+    }
+
+    public function medicalRecord() {
+        return $this->hasOne(MedicalRecord::class,"patient_id");
     }
 }

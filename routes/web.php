@@ -11,5 +11,4 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 });
 
-Route::post('/upload', [UserManagementController::class, 'createStudentAccounts'])->name('upload.submit');
 

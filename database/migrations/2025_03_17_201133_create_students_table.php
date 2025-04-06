@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\PatientTypes;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -11,7 +12,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('students', function (Blueprint $table) {
+        Schema::create('patients', function (Blueprint $table) {
             $table->id();
             $table->string('familyName');
             $table->string('firstName');
@@ -19,6 +20,8 @@ return new class extends Migration
             $table->string('password');
             $table->integer('age');
             $table->string('phoneNumber')->unique();
+            $table->enum('patientType',array_column(PatientTypes::cases(), 'value'))->default(PatientTypes::STUDENT->value);
+            $table->boolean('isActive')->default(true);
             $table->timestamps();
         });
         
@@ -29,6 +32,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('students');
+        Schema::dropIfExists('patients');
     }
 };

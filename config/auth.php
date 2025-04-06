@@ -14,7 +14,7 @@ return [
     */
 
     'defaults' => [
-        'guard' => env('AUTH_GUARD', 'student'),
+        'guard' => env('AUTH_GUARD', 'patient'),
         'passwords' => env('AUTH_PASSWORD_BROKER', 'users'),
     ],
 
@@ -36,9 +36,9 @@ return [
     */
 
     'guards' => [
-        'student' => [
+        'patient' => [
             'driver' => 'jwt',
-            'provider' => 'students',
+            'provider' => 'patients',
         ],
         'doctor' => [
             'driver' => 'jwt',
@@ -68,9 +68,9 @@ return [
     */
 
     'providers' => [
-        'students' => [
+        'patients' => [
             'driver' => 'eloquent',
-            'model' => App\Models\Student::class,
+            'model' => App\Models\Patient::class,
         ],
 
         'doctors' => [
@@ -103,8 +103,8 @@ return [
     */
 
     'passwords' => [
-        'students' => [
-            'provider' => 'students',
+        'patients' => [
+            'provider' => 'patients',
             'table' => env('AUTH_PASSWORD_RESET_TOKEN_TABLE', 'password_reset_tokens'),
             'expire' => 60,
             'throttle' => 60,

@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('password');
             $table->string('phoneNumber')->unique();
             $table->string('roles');
+            $table->boolean('isActive')->default(true);
             $table->timestamps();
         });
     }
