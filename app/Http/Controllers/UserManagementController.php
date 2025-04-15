@@ -23,10 +23,10 @@ use Illuminate\Validation\Rules\Password as PasswordRule;
 
 class UserManagementController extends Controller
 {
-    public function createPatientsFromFile(Request $request)
+    public function createPatientAccounts(Request $request)
     {
         $validated = $request->validate([
-            'file' => 'required|file|mimes:xlsx,csv,xls|max:2048',
+            'file' => 'required|file|mimes:xlsx,xls|max:2048',
         ]);
 
         $path = $validated['file']->store('temp_uploads');
@@ -38,12 +38,12 @@ class UserManagementController extends Controller
             return response()->json(['message' => 'File imported successfully and patient accounts created!'], 200);
 
         } catch (ValidationException $e) {
-             Log::error('Import validation failed: ' . $e->getMessage());
-             Storage::delete($storagePath);
-             return response()->json([
-                 'message' => 'Import failed due to validation errors within the file.',
-                 'errors' => $e->failures()
-             ], 422);
+            Log::error('Import validation failed: ' . $e->getMessage());
+            Storage::delete($storagePath);
+            return response()->json([
+                'message' => 'Import failed due to validation errors within the file.',
+                'errors' => $e->failures()
+            ], 422);
 
         } catch (\Exception $e) {
             Log::error('Import failed: ' . $e->getMessage() . ' Trace: ' . $e->getTraceAsString());
@@ -88,7 +88,7 @@ class UserManagementController extends Controller
 
     public function createDoctor(Request $request)
     {
-         $validated = $request->validate([
+        $validated = $request->validate([
             'firstName' => 'required|string|max:255',
             'familyName' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:doctors,email',
@@ -157,25 +157,34 @@ class UserManagementController extends Controller
         try {
             Mail::raw($message, function ($mail) use ($recipientEmail, $subject) {
                 $mail->to($recipientEmail)
-                     ->subject($subject);
+                    ->subject($subject);
             });
             Log::info("Credentials email sent successfully to {$recipientEmail}.");
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             Log::error("Failed to send credentials email to {$recipientEmail}: " . $e->getMessage());
-             // throw new \Exception("Failed to send email to {$recipientEmail}.");
+            // throw new \Exception("Failed to send email to {$recipientEmail}.");
         }
     }
 
-    public function getAdmins(int $page = 0, int $limit = 10) {
-        return Admin::paginate(request('limit'), ['*'], 'page', $page);
+    public function getAdmins()
+    {
+        return Admin::paginate(request('limit'), ['*'], 'page', request('page') ?? 1);  
     }
-    public function getDoctors(int $page = 0, int $limit = 10) {
-        return Doctor::paginate(request('limit'), ['*'], 'page', $page);
+    public function getDoctors()
+    {
+        return Doctor::paginate(request('limit'), ['*'], 'page', request('page') ?? 1);
     }
-    public function getPatients(int $page = 0, int $limit = 10, ?PatientTypes $patientType) {
-        $patientTypes = request('patient_type');
-        return Patient::when($patientType, function ($query) use ($patientType) {
-            return $query->where('patientType', $patientType);
-        })->paginate(request('limit'), ['*'], 'page', $page);
+    public function getPatients()
+    {
+        $patientType = request('patient_type') ?? null;
+        try {
+            $patients = Patient::when($patientType, function ($query) use ($patientType) {
+                return $query->where('patientType', $patientType);
+            })->paginate(request('limit') ?? 10, ['*'], 'page', request('page') ?? 1);
+            return $patients;
+        } catch (\Exception $e) {
+            Log::error('' . $e->getMessage());
+            return response()->json(['message' => 'Failed to fetch patients due to an error.', "errors" => $e], 500);
+        }
     }
 }

@@ -32,7 +32,8 @@ class MedicalRecordController extends Controller
         $medicalRecord = $patient->medicalRecord()->firstOrNew([]);
 
         return response()->json($medicalRecord);
-    }
+    }    }
+
 
     /**
      * Update the specified patient's medical record for a doctor.
