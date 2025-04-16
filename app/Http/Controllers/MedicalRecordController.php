@@ -32,7 +32,7 @@ class MedicalRecordController extends Controller
         $medicalRecord = $patient->medicalRecord()->firstOrNew([]);
 
         return response()->json($medicalRecord);
-    }    }
+    }    
 
 
     /**

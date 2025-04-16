@@ -11,8 +11,12 @@ Route::get("/logout",[AuthController::class,"logout"]);
 Route::post('/upload', [UserManagementController::class, 'createPatientAccounts'])->name('upload.submit');
 Route::put('/me', [AuthController::class, 'updateProfile']);
 Route::get('/admins', [UserManagementController::class,'getAdmins']);
+Route::post('/admins', [UserManagementController::class,'createAdmin']);
 Route::get('/doctors', [UserManagementController::class,'getDoctors']);
+Route::post('/doctors', [UserManagementController::class,'createDoctor']);
 Route::get('/patients', [UserManagementController::class,'getPatients']);
+Route::post('/patients',[UserManagementController::class,'createPatient']);
+
 Route::get('/patients/{patient}', function (string $patient) {
     return Patient::findOrFail( $patient );
 });
