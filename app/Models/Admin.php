@@ -11,6 +11,8 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
 class Admin extends Authenticatable implements JWTSubject
 {
     use HasFactory,Notifiable;
+
+    protected $guarded = [];
     public function getJWTIdentifier()
     {
         return $this->getKey();

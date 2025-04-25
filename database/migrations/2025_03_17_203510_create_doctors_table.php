@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('password');
             $table->string('phoneNumber')->unique();
-            $table->string('lastAvailableAt');
+            $table->string('lastAvailableAt')->nullable();
             $table->boolean('isActive')->default(true);
             $table->timestamps();
         });

@@ -11,6 +11,8 @@ class Doctor extends Authenticatable implements JWTSubject
 {
     /** @use HasFactory<\Database\Factories\DoctorFactory> */
     use HasFactory,Notifiable;
+    protected $guarded = [] ;
+
 
     public function getJWTIdentifier() {
         return $this->getKey();
@@ -18,5 +20,9 @@ class Doctor extends Authenticatable implements JWTSubject
 
     public function getJWTCustomClaims() {
         return [];
+    }
+
+    public function appointments() {
+        return $this->hasMany(Appointments::class,"doctor_id");
     }
 }
