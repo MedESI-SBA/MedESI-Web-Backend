@@ -168,11 +168,11 @@ class UserManagementController extends Controller
 
     public function getAdmins()
     {
-        return Admin::paginate(request('limit'), ['*'], 'page', request('page') ?? 1);  
+        return Admin::paginate(request('limit') ?? 10, ['*'], 'page', request('page') ?? 1);  
     }
     public function getDoctors()
     {
-        return Doctor::paginate(request('limit'), ['*'], 'page', request('page') ?? 1);
+        return Doctor::paginate(request('limit') ?? 10, ['*'], 'page', request('page') ?? 1);
     }
     public function getPatients()
     {

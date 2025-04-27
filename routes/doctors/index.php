@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AppointmentsController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ConsultationsController;
 use App\Http\Controllers\MedicalRecordController;
 use App\Http\Controllers\UserManagementController;
 
@@ -15,3 +16,13 @@ Route::get('/appointments/requested', [AppointmentsController::class,'getRequest
 Route::post('/appointments', [AppointmentsController::class,'createAppointmentByDoctor']);
 Route::get('/appointments', [AppointmentsController::class,'getAppointmentsForDoctor']);
 Route::post("/appointments/schedule", [AppointmentsController::class,"schedulePatientRequest"]);
+Route::put("/appointments", [AppointmentsController::class,"completeAppointment"]);
+Route::delete("/appointments", [AppointmentsController::class,"cancelAppointment"]);
+Route::get("/consultations/patient/{patientId}", [ConsultationsController::class,"getConsultationsByPatientId"]);
+Route::get("/consultations/{consultationId}", [ConsultationsController::class,"getConsultationById"]);
+Route::get("/consultations", [ConsultationsController::class,"getConsultaionsForDoctor"]);
+Route::post("/consultations", [ConsultationsController::class,"createDirectConsultation"]);
+Route::post("/consultations/appointment", [ConsultationsController::class,"createConsultationFromAppointment"]);
+Route::patch("/consultations", [ConsultationsController::class,"updateConsultation"]);
+
+

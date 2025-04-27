@@ -197,4 +197,38 @@ class AppointmentsController extends Controller
             $requestedDate = $requestedDate->format("Y-m-d");
         }
     }
+    public function cancelAppointment(Request $request) {
+        $request->validate([
+            'appointment_id' => 'required|exists:appointments,id',
+        ]);
+        $appointment = Appointments::find($request->appointment_id);
+        if ($appointment->status == AppoitmentStatus::CANCELLED->value) {
+            return response()->json([
+                'message' => 'Appointment is already canceled',
+            ], 400);
+        }
+        $appointment->status = AppoitmentStatus::CANCELLED->value;
+        $appointment->save();
+        return response()->json([
+            'message' => 'Appointment canceled successfully',
+            'appointment' => $appointment,
+        ]);
+    }
+    public function completeAppointment(Request $request) {
+        $request->validate([
+            'appointment_id' => 'required|exists:appointments,id',
+        ]);
+        $appointment = Appointments::find($request->appointment_id);
+        if ($appointment->status == AppoitmentStatus::COMPLETED->value) {
+            return response()->json([
+                'message' => 'Appointment is already completed',
+            ], 400);
+        }
+        $appointment->status = AppoitmentStatus::COMPLETED->value;
+        $appointment->save();
+        return response()->json([
+            'message' => 'Appointment completed successfully',
+            'appointment' => $appointment,
+        ]);
+    }
 }
