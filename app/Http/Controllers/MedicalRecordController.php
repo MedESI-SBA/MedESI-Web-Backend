@@ -23,15 +23,13 @@ class MedicalRecordController extends Controller
      */
     public function showForDoctor(Request $request,string $patientId): JsonResponse
     {
-        // Route Model Binding handles the 404 if patient not found.
-        // Authorization (is user a Doctor) is handled by middleware.
+     
 
         $patient = Patient::findOrFail($patientId);
-        // Retrieve the associated medical record, or a new empty instance if none exists.
-        // Assumes a 'medicalRecord' relationship is defined on the Patient model.
-        $medicalRecord = $patient->medicalRecord()->firstOrNew([]);
 
-        return response()->json($medicalRecord);
+        $medicalRecord = $patient->medicalRecord()->firstOrNew(["patient_id" => $patientId]);
+
+        return response()->json(["medical-record" => $medicalRecord, "patient" => $patient]);
     }    
 
 
