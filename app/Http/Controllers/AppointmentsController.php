@@ -48,7 +48,7 @@ class AppointmentsController extends Controller
         $doctor = auth()->user();
         $request->validate([
             'patient_id' => 'required|exists:patients,id',
-            'notes' => 'sometimes|string',
+            'notes' => 'sometimes|nullable|string',
             'date' => 'required|date_format:Y-m-d',
         ]);
 
@@ -112,13 +112,14 @@ class AppointmentsController extends Controller
     public function requestAppointmentByPatient(Request $request)
     {
         try {
+            $patient = auth()->user();
             $request->validate([
-                'notes' => 'sometimes|string',
+                'notes' => 'sometimes|nullable|string',
                 'date' => 'required|date_format:Y-m-d',
             ]);
             $requestedDate = new DateTime($request->date)->format("Y-m-d");
             $appointment = Appointments::create([
-                'patient_id' => $request->patient_id,
+                'patient_id' => $patient->id,
                 'notes' => $request->notes,
                 'status' => AppoitmentStatus::REQUESTED,
                 'createdBy' => AppoitmentCreator::PATIENT,

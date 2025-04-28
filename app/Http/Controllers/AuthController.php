@@ -132,9 +132,9 @@ class AuthController extends Controller
         }
 
         $validated = $request->validate([
-            'firstName' => 'sometimes|string|max:255',
-            'familyName' => 'sometimes|string|max:255',
-            'phoneNumber' => 'sometimes|string|max:20',
+            'firstName' => 'sometimes|nullable|string|max:255',
+            'familyName' => 'sometimes|nullable|string|max:255',
+            'phoneNumber' => 'sometimes|nullable|string|max:20',
         ]);
 
         $updateData = array_filter($validated, function($value) { return $value !== null; });

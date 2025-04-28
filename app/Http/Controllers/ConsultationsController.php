@@ -114,14 +114,14 @@ class ConsultationsController extends Controller
         $doctorId = auth()->user()->id;
         $validated = $request->validate([
             "patient_id" => "required|exists:patients,id",
-            "notes" => "sometimes|string|max:255",
-            "reorientation" => "sometimes|string|max:255",
-            "prescriptions" => "sometimes|array",
+            "notes" => "sometimes|nullable|string|max:255",
+            "reorientation" => "sometimes|nullable|string|max:255",
+            "prescriptions" => "sometimes|nullable|array",
             "prescriptions.*.name" => "required|string|max:255",
             "prescriptions.*.dosage" => "required|string|max:255",
             "prescriptions.*.frequency" => "required|string|max:255",
             "prescriptions.*.duration" => "required|string|max:255",
-            "prescriptionIssueDate" => "sometimes|date",
+            "prescriptionIssueDate" => "sometimes|nullable|date",
         ]);
         Log::info($validated);
 
@@ -152,14 +152,14 @@ class ConsultationsController extends Controller
         $validated = $request->validate([
             "patient_id" => "required|exists:patients,id",
             "appointment_id" => "required|exists:appointments,id",
-            "notes" => "sometimes|string|max:255",
-            "reorientation" => "sometimes|string|max:255",
-            "prescriptions" => "sometimes|array",
+            "notes" => "sometimes|nullable|string|max:255",
+            "reorientation" => "sometimes|nullable|string|max:255",
+            "prescriptions" => "sometimes|nullable|array",
             "prescriptions.*.name" => "required|string|max:255",
             "prescriptions.*.dosage" => "required|string|max:255",
             "prescriptions.*.frequency" => "required|string|max:255",
             "prescriptions.*.duration" => "required|string|max:255",
-            "prescriptionIssueDate" => "sometimes|date",
+            "prescriptionIssueDate" => "sometimes|nullable|date",
         ]);
         Log::info($validated);
 
@@ -191,14 +191,14 @@ class ConsultationsController extends Controller
         
         $validated = $request->validate([
             "consultation_id" => "required|exists:consultations,id",
-            "notes" => "sometimes|string|max:255",
-            "reorientation" => "sometimes|string|max:255",
-            "prescriptions" => "sometimes|array",
+            "notes" => "sometimes|nullable|string|max:255",
+            "reorientation" => "sometimes|nullable|string|max:255",
+            "prescriptions" => "sometimes|nullable|array",
             "prescriptions.*.name" => "required|string|max:255",
             "prescriptions.*.dosage" => "required|string|max:255",
             "prescriptions.*.frequency" => "required|string|max:255",
             "prescriptions.*.duration" => "required|string|max:255",
-            "prescriptions.*.id" => "sometimes|exists:prescription_items,id",
+            "prescriptions.*.id" => "sometimes|nullable|exists:prescription_items,id",
         ]);
         try {
             $consultation = \App\Models\Consultation::find($validated["consultation_id"]);
