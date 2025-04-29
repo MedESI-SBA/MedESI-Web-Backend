@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Enums\AppoitmentCreator;
 use App\Enums\AppoitmentStatus;
 use App\Models\Appointments;
+use App\Models\Patient;
 use DateInterval;
 use DatePeriod;
 use DateTime;
@@ -230,6 +231,20 @@ class AppointmentsController extends Controller
         return response()->json([
             'message' => 'Appointment completed successfully',
             'appointment' => $appointment,
+        ]);
+    }
+    public function getPatientByEmail(Request $request) {
+        $request->validate([
+            'email' => 'required|email',
+        ]);
+        $patient = Patient::where('email', $request->email)->first();
+        if (!$patient) {
+            return response()->json([
+                'message' => 'Patient not found',
+            ], 404);
+        }
+        return response()->json([
+            'patient' => $patient,
         ]);
     }
 }

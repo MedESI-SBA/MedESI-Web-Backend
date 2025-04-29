@@ -8,12 +8,13 @@ use Log;
 
 class ConsultationsController extends Controller
 {
-    public function getConsultationsByPatientId(Request $request, $patientId) {
+    public function getConsultationsByPatientId(Request $request, $patientId)
+    {
 
-        validator(["patient_id"=>$patientId], [
+        validator(["patient_id" => $patientId], [
             "patient_id" => "required|exists:patients,id"
         ])->validate();
-        
+
 
         try {
 
@@ -36,10 +37,11 @@ class ConsultationsController extends Controller
             ]);
         }
     }
-    public function getConsultationsForPatient(Request $request) {
+    public function getConsultationsForPatient(Request $request)
+    {
 
         $patientId = auth()->user()->id;
-        
+
 
         try {
 
@@ -62,11 +64,12 @@ class ConsultationsController extends Controller
             ]);
         }
     }
-    public function getConsultationById(Request $request,$consultationId) {
-        validator(["consultation_id"=>$consultationId], [
+    public function getConsultationById(Request $request, $consultationId)
+    {
+        validator(["consultation_id" => $consultationId], [
             "consultation_id" => "required|exists:consultations,id"
         ])->validate();
-        
+
 
         try {
             $consultation = \App\Models\Consultation::with([
@@ -74,7 +77,7 @@ class ConsultationsController extends Controller
                 "doctor",
                 "patient",
                 "prescription.prescriptionItems"
-                ])->where("id", $consultationId)->first();
+            ])->where("id", $consultationId)->first();
 
             return response()->json([
                 "status" => true,
@@ -88,7 +91,8 @@ class ConsultationsController extends Controller
             ]);
         }
     }
-    public function getConsultaionsForDoctor(Request $request) {
+    public function getConsultaionsForDoctor(Request $request)
+    {
         try {
             $doctorId = auth()->user()->id;
             $consultations = \App\Models\Consultation::with([
@@ -96,7 +100,7 @@ class ConsultationsController extends Controller
                 "doctor",
                 "patient",
                 "prescription.prescriptionItems"
-            ])->where("doctor_id", $doctorId)->paginate($request->limit ?? 10,["*"],"page",$request->page ?? 1);
+            ])->where("doctor_id", $doctorId)->paginate($request->limit ?? 10, ["*"], "page", $request->page ?? 1);
 
             return response()->json([
                 "status" => true,
@@ -110,7 +114,8 @@ class ConsultationsController extends Controller
             ]);
         }
     }
-    public function createDirectConsultation(Request $request) {
+    public function createDirectConsultation(Request $request)
+    {
         $doctorId = auth()->user()->id;
         $validated = $request->validate([
             "patient_id" => "required|exists:patients,id",
@@ -132,8 +137,8 @@ class ConsultationsController extends Controller
                 "notes" => $validated["notes"] ?? null,
                 "reorientation" => $validated["reorientation"] ?? null,
             ])->prescription()->create([
-                "issueDate" => $validated["prescriptionIssueDate"] ?? now(),
-            ])->prescriptionItems()->createMany($validated["prescriptions"])[0]->prescription->consultation->load(["prescription","prescription.prescriptionItems"]);
+                        "issueDate" => $validated["prescriptionIssueDate"] ?? now(),
+                    ])->prescriptionItems()->createMany($validated["prescriptions"])[0]->prescription->consultation->load(["prescription", "prescription.prescriptionItems"]);
 
             return response()->json([
                 "status" => true,
@@ -147,7 +152,8 @@ class ConsultationsController extends Controller
             ]);
         }
     }
-    public function createConsultationFromAppointment(Request $request) {
+    public function createConsultationFromAppointment(Request $request)
+    {
         $doctorId = auth()->user()->id;
         $validated = $request->validate([
             "patient_id" => "required|exists:patients,id",
@@ -171,8 +177,8 @@ class ConsultationsController extends Controller
                 "reorientation" => $validated["reorientation"] ?? null,
                 "appointment_id" => $validated["appointment_id"],
             ])->prescription()->create([
-                "issueDate" => $validated["prescriptionIssueDate"] ?? now(),
-            ])->prescriptionItems()->createMany($validated["prescriptions"])[0]->prescription->consultation->load(["prescription","prescription.prescriptionItems","appointment"]);
+                        "issueDate" => $validated["prescriptionIssueDate"] ?? now(),
+                    ])->prescriptionItems()->createMany($validated["prescriptions"])[0]->prescription->consultation->load(["prescription", "prescription.prescriptionItems", "appointment"]);
 
             return response()->json([
                 "status" => true,
@@ -187,8 +193,9 @@ class ConsultationsController extends Controller
         }
     }
     //update consultation
-    public function updateConsultation(Request $request) {
-        
+    public function updateConsultation(Request $request)
+    {
+
         $validated = $request->validate([
             "consultation_id" => "required|exists:consultations,id",
             "notes" => "sometimes|nullable|string|max:255",
@@ -210,7 +217,7 @@ class ConsultationsController extends Controller
                 $prescription = $consultation->prescription()->updateOrCreate([
                     "issueDate" => now(),
                 ]);
-            
+
                 foreach ($validated["prescriptions"] as $prescriptionData) {
                     $prescription->prescriptionItems()->updateOrCreate(
                         [
@@ -224,7 +231,7 @@ class ConsultationsController extends Controller
                     );
                 }
             }
-            
+
             return response()->json([
                 "status" => true,
                 "message" => "Consultation updated successfully",
@@ -236,5 +243,33 @@ class ConsultationsController extends Controller
                 "message" => $e->getMessage()
             ]);
         }
-    } 
+    }
+
+    public function getConsultationByAppointment(Request $request, $appointmentId)
+    {
+        validator(["appointment_id" => $appointmentId], [
+            "appointment_id" => "required|exists:appointments,id",
+        ]);
+
+
+        try {
+            $consultation = \App\Models\Consultation::with([
+                "appointment",
+                "doctor",
+                "patient",
+                "prescription.prescriptionItems"
+            ])->where("appointment_id", $appointmentId)->first();
+
+            return response()->json([
+                "status" => true,
+                "message" => "Consultation fetched successfully",
+                "data" => $consultation
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                "status" => false,
+                "message" => $e->getMessage()
+            ]);
+        }
+    }
 }

@@ -13,3 +13,4 @@ Route::get('/appointments', [AppointmentsController::class,'getAppointmentsForPa
 Route::post('/appointments', [AppointmentsController::class,'requestAppointmentByPatient']);
 Route::delete("/appointments", [AppointmentsController::class,"cancelAppointment"]);
 Route::get("/consultations", [ConsultationsController::class,"getConsultationsForPatient"]);
+Route::get("/consultations/{appointmentId}", [ConsultationsController::class,"getConsultationById"]);
