@@ -24,5 +24,5 @@ Route::get("/consultations", [ConsultationsController::class,"getConsultaionsFor
 Route::post("/consultations", [ConsultationsController::class,"createDirectConsultation"]);
 Route::post("/consultations/appointment", [ConsultationsController::class,"createConsultationFromAppointment"]);
 Route::patch("/consultations", [ConsultationsController::class,"updateConsultation"]);
-Route::get("/patients",[AppointmentsController::class,"getPatientByEmail"]);
+Route::get("/patients/email",[AppointmentsController::class,"getPatientByEmail"]);
 
