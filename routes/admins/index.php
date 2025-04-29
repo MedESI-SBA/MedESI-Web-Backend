@@ -1,6 +1,7 @@
 <?php 
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\MedicalRecordController;
 use App\Http\Controllers\UserManagementController;
 use App\Models\Admin;
 use App\Models\Doctor;
@@ -27,3 +28,4 @@ Route::get('/admins/{admin}', function (string $admin) {
 Route::get('/doctors/{doctor}', function (string $doctor) {
     return Doctor::findOrFail( $doctor );
 });
+Route::get('/medical-records/{patientId}',[MedicalRecordController::class,'showForDoctor']);
