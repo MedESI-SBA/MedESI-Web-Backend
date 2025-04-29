@@ -25,4 +25,4 @@ Route::post("/consultations", [ConsultationsController::class,"createDirectConsu
 Route::post("/consultations/appointment", [ConsultationsController::class,"createConsultationFromAppointment"]);
 Route::patch("/consultations", [ConsultationsController::class,"updateConsultation"]);
 Route::get("/patients/email",[AppointmentsController::class,"getPatientByEmail"]);
-
+Route::post("/consultations/prescription",[ConsultationsController::class,"savePrescription"]);

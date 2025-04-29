@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Appointments;
 use Exception;
+use File;
 use Illuminate\Http\Request;
 use Log;
+use Storage;
 
 class ConsultationsController extends Controller
 {
@@ -136,16 +139,17 @@ class ConsultationsController extends Controller
                 "doctor_id" => $doctorId,
                 "notes" => $validated["notes"] ?? null,
                 "reorientation" => $validated["reorientation"] ?? null,
-            ])->prescription()->create([
-                        "issueDate" => $validated["prescriptionIssueDate"] ?? now(),
-                    ])->prescriptionItems()->createMany($validated["prescriptions"])[0]->prescription->consultation->load(["prescription", "prescription.prescriptionItems"]);
-
+            ]);
+            $consultation->prescription()->create([
+                "issueDate" => $validated["prescriptionIssueDate"] ?? now(),
+            ])->prescriptionItems()->createMany($validated["prescriptions"]);
             return response()->json([
                 "status" => true,
                 "message" => "Consultation created successfully",
                 "data" => $consultation
             ]);
         } catch (\Exception $e) {
+            Log::error($e);
             return response()->json([
                 "status" => false,
                 "message" => $e->getMessage()
@@ -179,6 +183,10 @@ class ConsultationsController extends Controller
             ])->prescription()->create([
                         "issueDate" => $validated["prescriptionIssueDate"] ?? now(),
                     ])->prescriptionItems()->createMany($validated["prescriptions"])[0]->prescription->consultation->load(["prescription", "prescription.prescriptionItems", "appointment"]);
+            $appointment = Appointments::findOrFail($validated["appointment_id"]);
+            $appointment->update([
+                "status" => "completed",
+            ]);
 
             return response()->json([
                 "status" => true,
@@ -271,5 +279,30 @@ class ConsultationsController extends Controller
                 "message" => $e->getMessage()
             ]);
         }
+    }
+
+    public function savePrescription(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|file|mimes:pdf,jpg,jpeg,png', // adjust mime types as needed
+            'consultation_id' => 'required|string'
+        ]);
+
+
+        $file = $request->file('file');
+        $consultationId = $request->consultation_id;
+
+        $filename = "consultation_" . $consultationId . '.' . $file->getClientOriginalExtension();
+
+        $destinationPath = public_path('prescriptions');
+        if (!File::exists($destinationPath)) {
+            File::makeDirectory($destinationPath, 0755, true);
+        }
+
+        $file->move($destinationPath, $filename);
+
+        return response()->json([
+            'message' => 'Prescription saved successfully.',
+        ]);
     }
 }
