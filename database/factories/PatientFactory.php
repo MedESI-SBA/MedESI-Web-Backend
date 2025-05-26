@@ -20,7 +20,7 @@ class PatientFactory extends Factory
             'firstName' => fake()->firstName(),
             'email' => fake()->email(),
             'password' => Hash::make('password'),
-            'age' => fake()->numberBetween(17,25),
+            'birthDate' => fake()->date(),
             'phoneNumber' => fake()->phoneNumber(),
         ];
     }

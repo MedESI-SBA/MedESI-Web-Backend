@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('firstName');
             $table->string('email')->unique();
             $table->string('password');
-            $table->integer('age');
+            $table->date('birthDate');
             $table->string('phoneNumber')->unique();
             $table->enum('patientType',array_column(PatientTypes::cases(), 'value'))->default(PatientTypes::STUDENT->value);
             $table->boolean('isActive')->default(true);
