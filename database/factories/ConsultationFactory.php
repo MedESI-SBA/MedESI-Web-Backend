@@ -21,9 +21,12 @@ class ConsultationFactory extends Factory
     {
         return [
             "notes" => fake()->text(),
-            "reorientation" => "reorientation",
+            "reorientation" => fake() -> randomElement(["reorientation",""]),
             "doctor_id" => Doctor::query()->inRandomOrder()->get()[0]->id,
             "patient_id" => Patient::factory(),
+            "condition" => fake()->randomElement(["Back pain", "Asthma", "Diabetes", "Hypertension", "Anxiety", "Depression", "Allergies", "Gastroenteritis", "Flu", "Cold"]),
+            "contagious" => fake()->boolean(),
+            "chronic" => fake()->boolean(),
         ];
     }
 

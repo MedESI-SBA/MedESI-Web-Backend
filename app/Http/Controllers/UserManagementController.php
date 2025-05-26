@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 use Maatwebsite\Excel\Facades\Excel;
 use Maatwebsite\Excel\Validators\ValidationException;
 use Illuminate\Validation\Rules\Enum;
@@ -57,10 +58,11 @@ class UserManagementController extends Controller
         $validated = $request->validate([
             'firstName' => 'required|string|max:255',
             'familyName' => 'required|string|max:255',
-            'age' => 'required|integer|min:0',
+            'birthDate' => 'required|date|before:today',
             'email' => 'required|string|email|max:255|unique:patients,email',
             'phoneNumber' => 'required|string|max:20',
             'patient_type' => ['required', new Enum(PatientTypes::class)],
+            "gender" => ['required', 'string', Rule::in(["male", "female"])],
         ]);
 
         $password = Str::random(10);
@@ -74,6 +76,7 @@ class UserManagementController extends Controller
                 'phoneNumber' => $validated['phoneNumber'],
                 'patientType' => $validated['patient_type'],
                 'password' => Hash::make($password),
+                'gender' => $validated["gender"]
             ]);
 
             $this->sendCredentialsEmail($patient->email, $password);
@@ -168,7 +171,7 @@ class UserManagementController extends Controller
 
     public function getAdmins()
     {
-        return Admin::paginate(request('limit') ?? 10, ['*'], 'page', request('page') ?? 1);  
+        return Admin::paginate(request('limit') ?? 10, ['*'], 'page', request('page') ?? 1);
     }
     public function getDoctors()
     {

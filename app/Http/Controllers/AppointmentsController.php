@@ -155,7 +155,7 @@ class AppointmentsController extends Controller
         while (true) {
             $startDate = new DateTime($requestedDate)->setTime(8, 0);
             $endDate = new DateTime($requestedDate)->setTime(12, 0);
-            $interval = DateInterval::createFromDateString("15 minutes");
+            $interval = DateInterval::createFromDateString($doctor->appointmentDuration. " minutes");
             $firstPeriod = new DatePeriod($startDate, $interval, $endDate);
             $startDate = new DateTime($requestedDate)->setTime(13, 0);
             $endDate = new DateTime($requestedDate)->setTime(17, 0);

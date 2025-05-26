@@ -22,6 +22,7 @@ class PatientFactory extends Factory
             'password' => Hash::make('password'),
             'birthDate' => fake()->date(),
             'phoneNumber' => fake()->phoneNumber(),
+            'gender' => fake()->randomElement(["male","female"])
         ];
     }
 }

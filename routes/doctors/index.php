@@ -4,6 +4,7 @@ use App\Http\Controllers\AppointmentsController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ConsultationsController;
 use App\Http\Controllers\MedicalRecordController;
+use App\Http\Controllers\StatisticsController;
 use App\Http\Controllers\UserManagementController;
 
 Route::get("/me",[AuthController::class,"me"]);
@@ -26,3 +27,4 @@ Route::post("/consultations/appointment", [ConsultationsController::class,"creat
 Route::patch("/consultations", [ConsultationsController::class,"updateConsultation"]);
 Route::get("/patients/email",[AppointmentsController::class,"getPatientByEmail"]);
 Route::post("/consultations/prescription",[ConsultationsController::class,"savePrescription"]);
+Route::get('/stats',[StatisticsController::class,'index']);

@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('phoneNumber')->unique();
             $table->string('lastAvailableAt')->nullable();
             $table->boolean('isActive')->default(true);
+            $table->integer('appointmentDuration')->default(15);
             $table->timestamps();
         });
     }

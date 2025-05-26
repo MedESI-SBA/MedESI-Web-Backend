@@ -15,6 +15,13 @@ return new class extends Migration
             $table->id();
             $table->text("notes")->nullable();
             $table->text("reorientation")->nullable();
+            $table->text("height")->nullable();
+            $table->text("weight")->nullable();
+            $table->text("bloodPressure")->nullable();
+            $table->text("heartRate")->nullable();
+            $table->text("condition")->nullable();
+            $table->boolean("contagious")->nullable();
+            $table->boolean("chronic")->nullable();
             $table->foreignId("appointment_id")->nullable()->constrained("appointments")->onDelete("cascade");
             $table->foreignId("doctor_id")->nullable()->constrained("doctors")->onDelete("cascade");
             $table->foreignId("patient_id")->nullable()->constrained("patients")->onDelete("cascade");
