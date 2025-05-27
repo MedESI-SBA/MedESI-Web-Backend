@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('firstName');
             $table->string('email')->unique();
             $table->string('password');
-            $table->enum("gender",["male","female"]);
+            $table->enum("gender",["male","female"])->default("male");
             $table->date('birthDate');
             $table->string('phoneNumber')->unique();
             $table->enum('patientType',array_column(PatientTypes::cases(), 'value'))->default(PatientTypes::STUDENT->value);

@@ -62,7 +62,7 @@ class UserManagementController extends Controller
             'email' => 'required|string|email|max:255|unique:patients,email',
             'phoneNumber' => 'required|string|max:20',
             'patient_type' => ['required', new Enum(PatientTypes::class)],
-            "gender" => ['required', 'string', Rule::in(["male", "female"])],
+            "gender" => ['sometimes', 'string', Rule::in(["male", "female"])],
         ]);
 
         $password = Str::random(10);

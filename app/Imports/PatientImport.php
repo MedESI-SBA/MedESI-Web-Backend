@@ -25,12 +25,12 @@ class PatientImport implements ToModel, WithHeadingRow, WithValidation
             $patient = new Patient([
                 "firstName" => $row["first_name"],
                 "familyName" => $row["family_name"],
-                "age" => $row["age"],
+                "birthDate" => $row["birthDate"],
                 "phoneNumber" => $row["phone_number"],
                 "email" => $row["email"],
                 "patientType" => $row["patient_type"],
                 "password" => Hash::make($password),
-                'gende'=> $row['gender']
+                'gender'=> $row['gender']
             ]);
 
             $patient->save();
@@ -51,7 +51,7 @@ class PatientImport implements ToModel, WithHeadingRow, WithValidation
             '*.first_name' => 'required|string|max:255',
             '*.family_name' => 'required|string|max:255',
             '*.phone_number' => 'required|string|max:20',
-            '*.age' => 'required|integer|min:0',
+            '*.birthDate' => 'required|integer|min:0',
             '*.email' => 'required|email|ends_with:esi-sba.dz|unique:patients,email',
             '*.patient_type' => ['required', Rule::enum(PatientTypes::class)],
             "gender" => ['required', 'string', Rule::in(["male", "female"])],
