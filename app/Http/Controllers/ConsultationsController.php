@@ -130,6 +130,13 @@ class ConsultationsController extends Controller
             "prescriptions.*.frequency" => "required|string|max:255",
             "prescriptions.*.duration" => "required|string|max:255",
             "prescriptionIssueDate" => "sometimes|nullable|date",
+            "height" => "sometimes|nullable|string|max:255",
+            "weight" => "sometimes|nullable|string|max:255",
+            "bloodPressure" => "sometimes|nullable|string|max:255",
+            "heartRate" => "sometimes|nullable|string|max:255",
+            "condition" => "sometimes|nullable|string|max:255",
+            "contagious" => "sometimes|nullable|boolean",
+            "chronic" => "sometimes|nullable|boolean",
         ]);
         Log::info($validated);
 
@@ -139,6 +146,13 @@ class ConsultationsController extends Controller
                 "doctor_id" => $doctorId,
                 "notes" => $validated["notes"] ?? null,
                 "reorientation" => $validated["reorientation"] ?? null,
+                "height" => $validated["height"] ?? null,
+                "weight" => $validated["weight"] ?? null,
+                "bloodPressure" => $validated["bloodPressure"] ?? null,
+                "heartRate" => $validated["heartRate"] ?? null,
+                "condition" => $validated["condition"] ?? null,
+                "contagious" => $validated["contagious"] ?? null,
+                "chronic" => $validated["chronic"] ?? null,
             ]);
             $consultation->prescription()->create([
                 "issueDate" => $validated["prescriptionIssueDate"] ?? now(),
@@ -170,6 +184,13 @@ class ConsultationsController extends Controller
             "prescriptions.*.frequency" => "required|string|max:255",
             "prescriptions.*.duration" => "required|string|max:255",
             "prescriptionIssueDate" => "sometimes|nullable|date",
+            "height" => "sometimes|nullable|string|max:255",
+            "weight" => "sometimes|nullable|string|max:255",
+            "bloodPressure" => "sometimes|nullable|string|max:255",
+            "heartRate" => "sometimes|nullable|string|max:255",
+            "condition" => "sometimes|nullable|string|max:255",
+            "contagious" => "sometimes|nullable|boolean",
+            "chronic" => "sometimes|nullable|boolean",
         ]);
         Log::info($validated);
 
