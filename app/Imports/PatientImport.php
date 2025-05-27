@@ -54,7 +54,7 @@ class PatientImport implements ToModel, WithHeadingRow, WithValidation
             '*.birthDate' => 'required|integer|min:0',
             '*.email' => 'required|email|ends_with:esi-sba.dz|unique:patients,email',
             '*.patient_type' => ['required', Rule::enum(PatientTypes::class)],
-            "gender" => ['required', 'string', Rule::in(["male", "female"])],
+            "*.gender" => ['required', 'string', Rule::in(["male", "female"])],
 
         ];
     }
