@@ -71,7 +71,7 @@ class UserManagementController extends Controller
             $patient = Patient::create([
                 'firstName' => $validated['firstName'],
                 'familyName' => $validated['familyName'],
-                'age' => $validated['age'],
+                'birthDate' => $validated['birthDate'],
                 'email' => $validated['email'],
                 'phoneNumber' => $validated['phoneNumber'],
                 'patientType' => $validated['patient_type'],
