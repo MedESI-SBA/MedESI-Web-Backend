@@ -201,6 +201,13 @@ class ConsultationsController extends Controller
                 "notes" => $validated["notes"] ?? null,
                 "reorientation" => $validated["reorientation"] ?? null,
                 "appointment_id" => $validated["appointment_id"],
+                "height" => $validated["height"] ?? null,
+                "weight" => $validated["weight"] ?? null,
+                "bloodPressure" => $validated["bloodPressure"] ?? null,
+                "heartRate" => $validated["heartRate"] ?? null,
+                "condition" => $validated["condition"] ?? null,
+                "contagious" => $validated["contagious"] ?? null,
+                "chronic" => $validated["chronic"] ?? null,
             ])->prescription()->create([
                         "issueDate" => $validated["prescriptionIssueDate"] ?? now(),
                     ])->prescriptionItems()->createMany($validated["prescriptions"])[0]->prescription->consultation->load(["prescription", "prescription.prescriptionItems", "appointment"]);
@@ -235,12 +242,27 @@ class ConsultationsController extends Controller
             "prescriptions.*.frequency" => "required|string|max:255",
             "prescriptions.*.duration" => "required|string|max:255",
             "prescriptions.*.id" => "sometimes|nullable|exists:prescription_items,id",
+            "height" => "sometimes|nullable|string|max:255",
+            "weight" => "sometimes|nullable|string|max:255",
+            "bloodPressure" => "sometimes|nullable|string|max:255",
+            "heartRate" => "sometimes|nullable|string|max:255",
+            "condition" => "sometimes|nullable|string|max:255",
+            "contagious" => "sometimes|nullable|boolean",
+            "chronic" => "sometimes|nullable|boolean",
         ]);
         try {
             $consultation = \App\Models\Consultation::find($validated["consultation_id"]);
             $consultation->update([
                 "notes" => $validated["notes"] ?? null,
                 "reorientation" => $validated["reorientation"] ?? null,
+                "height" => $validated["height"] ?? null,
+                "weight" => $validated["weight"] ?? null,
+                "bloodPressure" => $validated["bloodPressure"] ?? null,
+                "heartRate" => $validated["heartRate"] ?? null,
+                "condition" => $validated["condition"] ?? null,
+                "contagious" => $validated["contagious"] ?? null,
+                "chronic" => $validated["chronic"] ?? null,
+                "status" => "completed",
             ]);
             if (isset($validated["prescriptions"])) {
                 $prescription = $consultation->prescription()->updateOrCreate([
