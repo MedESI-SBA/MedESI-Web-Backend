@@ -262,7 +262,6 @@ class ConsultationsController extends Controller
                 "condition" => $validated["condition"] ?? null,
                 "contagious" => $validated["contagious"] ?? null,
                 "chronic" => $validated["chronic"] ?? null,
-                "status" => "completed",
             ]);
             if (isset($validated["prescriptions"])) {
                 $prescription = $consultation->prescription()->updateOrCreate([
